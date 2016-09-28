@@ -1,0 +1,17 @@
+---
+dependencies:
+
+galaxy_info:
+  author: "Chris Olstrom"
+  company: "TELUS digital"
+  description: "Application Performance Monitoring"
+  license: MIT
+  platforms:
+    - name: debian
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all
+  categories:
+    - monitoring

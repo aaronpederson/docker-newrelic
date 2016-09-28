@@ -1,0 +1,48 @@
+---
+- name: Install Packages | apt
+  apt:
+    state: latest
+    pkg: "{{ item }}"
+  with_items:
+    - newrelic-sysmond
+  tags:
+    - software-installation
+    - using-apt
+
+- name: Preemptively Answer | PHP APM | newrelic.appname
+  debconf:
+    name: newrelic-php5
+    question: newrelic-php5/application-name
+    vtype: string
+    value: "{{ newrelic_appname }}"
+  when: newrelic_php_apm_enabled
+
+- name: Preemptively Answer | PHP APM | newrelic.license
+  debconf:
+    name: newrelic-php5
+    question: newrelic-php5/license-key
+    vtype: string
+    value: "{{ newrelic_license }}"
+  when: newrelic_php_apm_enabled
+
+- name: Install Packages | apt
+  apt:
+    state: latest
+    pkg: "{{ item }}"
+  with_items:
+    - newrelic-php5
+  when: newrelic_php_apm_enabled
+  tags:
+    - software-installation
+    - using-apt
+
+- name: Install PHP APM | newrelic-install
+  shell: newrelic-install install
+  args:
+    executable: /bin/bash
+  notify: service | php5-fpm | reloaded
+  when: newrelic_php_apm_enabled
+  tags:
+    - monitoring
+    - using-newrelic
+    - php
